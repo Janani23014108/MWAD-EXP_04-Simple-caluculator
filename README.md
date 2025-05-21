@@ -1,4 +1,4 @@
-![Screenshot 2025-05-21 222332](https://github.com/user-attachments/assets/0a9cd6d4-5647-47d9-baae-9b170c9db7fe)# MWAD-EXP_04-Simple-caluculator
+
 ## Date:20.5.2025
 
 ## AIM
