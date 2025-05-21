@@ -1,5 +1,5 @@
-# MWAD-EXP_04-Simple-caluculator
-## Date:
+![Screenshot 2025-05-21 222332](https://github.com/user-attachments/assets/0a9cd6d4-5647-47d9-baae-9b170c9db7fe)# MWAD-EXP_04-Simple-caluculator
+## Date:20.5.2025
 
 ## AIM
 To  develop a Simple Calculator using React.js with clean and responsive design, ensuring a smooth user experience across different screen sizes.
@@ -47,9 +47,244 @@ Upload to GitHub Pages for free hosting.
 
 ## PROGRAM
 
+## App.jsx
+```
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import Button from './Button'; // <-- new import
+
+function App() {
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState('');
+
+  const handleClick = (value) => {
+    if (value === '=') {
+      calculateResult();
+    } else if (value === 'C') {
+      clearInput();
+    } else if (value === '⌫') {
+      setInput((prevInput) => prevInput.slice(0, -1));
+    } else {
+      setInput((prevInput) => prevInput + value);
+    }
+  };
+
+  const calculateResult = () => {
+    try {
+      if (input.includes('/0')) {
+        setResult('Error: Division by zero');
+      } else {
+        setResult(eval(input).toString());
+      }
+    } catch (error) {
+      setResult('Error');
+    }
+  };
+
+  const clearInput = () => {
+    setInput('');
+    setResult('');
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const key = event.key;
+      if (/[0-9+\-*/.=C]|Backspace|Enter|Escape/.test(key)) {
+        event.preventDefault();
+        if (key === 'Enter' || key === '=') {
+          calculateResult();
+        } else if (key === 'Backspace') {
+          setInput((prevInput) => prevInput.slice(0, -1));
+        } else if (key === 'Escape' || key === 'C') {
+          clearInput();
+        } else {
+          setInput((prevInput) => prevInput + key);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [input]);
+
+  return (
+    <div className="calculator">
+      <h1>Calculator</h1>
+      <div className="display">
+        <input type="text" value={input} readOnly />
+        <div className="result">{result}</div>
+      </div>
+      <div className="buttons">
+        {['C', '%', '⌫', '/', '7', '8', '9', '*', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='].map((button) => (
+          <Button
+            key={button}
+            label={button}
+            onClick={handleClick}
+            className={
+              button === '=' ? 'equals' : 
+              button === 'C' ? 'clear' : 
+              button === '⌫' ? 'backspace' : ''
+            }
+          />
+        ))}
+      </div>
+      <footer className="footer">
+        <p>&copy; Developed by: J.JANANI</p>
+        <p>Register Number: 212223230085</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## App.css
+```
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2eabef, #5fd4ef);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.calculator {
+  background: #2e1e4d;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.188);
+  width: 320px;
+}
+
+h1 {
+  color: #dda0dd;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.display {
+  background: #f8f0ff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.display input {
+  width: 100%;
+  height: 40px;
+  font-size: 50px;
+  text-align: right;
+  padding: 5px;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: #ee16a6;
+}
+
+.result {
+  font-size: 30px;
+  text-align: right;
+  padding: 5px;
+  color: #820071;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+button {
+  width: 100%;
+  height: 60px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  background: #6a5acd;
+  color: #fff;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #ff6fe0;
+}
+
+button:active {
+  background: #483d8b;
+}
+
+.equals {
+  grid-column: span 2;
+  background: #70c9db;
+}
+
+.equals:hover {
+  background: #b19cd9;
+}
+
+.clear {
+  background: #ba55d3;
+}
+
+.clear:hover {
+  background: #29c8ec;
+}
+
+.backspace {
+  background: #4f99e9;
+}
+
+.backspace:hover {
+  background: #2adbeb;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  border-top: 1px solid #aaa;
+}
+
+.footer p {
+  margin: 5px 0;
+}
+
+```
+## Button.jsx
+```
+import React from 'react';
+
+function Button({ label, onClick, className }) {
+  return (
+    <button onClick={() => onClick(label)} className={className}>
+      {label}
+    </button>
+  );
+}
+
+export default Button;
+```
+
+
+
 
 ## OUTPUT
 
+![Screenshot 2025-05-21 222332](https://github.com/user-attachments/assets/a761994f-9a12-4788-8dcf-c2742d15e6aa)
 
 ## RESULT
 The program for developing a simple calculator in React.js is executed successfully.
